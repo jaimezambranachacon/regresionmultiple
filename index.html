@@ -2,35 +2,65 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Simulación de Regresión Múltiple</title>
+  <title>Simulación de Regresión Lineal Múltiple</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h2 { color: #2c3e50; }
+    pre { background: #f4f4f4; padding: 10px; }
+  </style>
 </head>
 <body>
-  <h1>Regresión Lineal Múltiple</h1>
-  <p>Ejemplo: Ventas vs Publicidad y Vendedores</p>
+  <h1>Regresión Lineal Múltiple - Simulación Paso a Paso</h1>
 
-  <button onclick="calcular()">Calcular Coeficientes</button>
-  <pre id="resultado"></pre>
+  <h2>1. Datos de entrada</h2>
+  <pre id="datos"></pre>
 
+  <h2>2. Matriz X y vector Y</h2>
+  <pre id="matrices"></pre>
+
+  <h2>3. Producto XᵀX y XᵀY</h2>
+  <pre id="productos"></pre>
+
+  <h2>4. Inversa de XᵀX</h2>
+  <pre id="inversa"></pre>
+
+  <h2>5. Coeficientes β</h2>
+  <pre id="coeficientes"></pre>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
   <script>
-    function calcular() {
-      // Matriz X (con intercepto)
-      let X = [
+    function simulacion() {
+      // Datos de ejemplo: Ventas vs Publicidad y Vendedores
+      const X = [
         [1,2,3],
         [1,4,4],
         [1,6,6],
         [1,8,7],
         [1,10,9]
       ];
-      // Vector Y
-      let Y = [200,340,600,800,1000];
+      const Y = [200,340,600,800,1000];
 
-      // Usamos math.js para operaciones matriciales (puedes incluir la librería)
-      // Aquí simplificado: normalmente se haría (X^T X)^-1 X^T Y
-      // Para demo, mostramos resultado directo
-      let beta = [20, 90, 40]; // resultado aproximado
-      document.getElementById("resultado").textContent =
-        "Modelo: Y = " + beta[0] + " + " + beta[1] + "X1 + " + beta[2] + "X2";
+      // Mostrar datos
+      document.getElementById("datos").textContent = JSON.stringify(Y) + "\n" + JSON.stringify(X);
+
+      // Calcular XᵀX y XᵀY
+      const XT = math.transpose(X);
+      const XTX = math.multiply(XT, X);
+      const XTY = math.multiply(XT, Y);
+
+      document.getElementById("matrices").textContent = "X:\n" + JSON.stringify(X) + "\nY:\n" + JSON.stringify(Y);
+      document.getElementById("productos").textContent = "XᵀX:\n" + JSON.stringify(XTX) + "\nXᵀY:\n" + JSON.stringify(XTY);
+
+      // Inversa de XᵀX
+      const invXTX = math.inv(XTX);
+      document.getElementById("inversa").textContent = JSON.stringify(invXTX);
+
+      // Coeficientes β
+      const beta = math.multiply(invXTX, XTY);
+      document.getElementById("coeficientes").textContent = "β = " + JSON.stringify(beta) + "\nModelo: Y = " + beta[0].toFixed(2) + " + " + beta[1].toFixed(2) + "X1 + " + beta[2].toFixed(2) + "X2";
     }
+
+    simulacion();
   </script>
 </body>
 </html>
